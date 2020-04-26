@@ -1,0 +1,5 @@
+linters:
+  tests: true
+  enable-all: true
+  disable:
+    - gomnd

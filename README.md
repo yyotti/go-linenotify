@@ -1,6 +1,8 @@
 # go-linenotify
 Helper functions for sending message by LINE Notify API.
 
+[![CI](https://github.com/yyotti/go-linenotify/workflows/CI/badge.svg)](https://github.com/yyotti/go-linenotify/actions?query=workflow%3ACI)
+
 ## Install
 ```sh
 go get github.com/yyotti/go-linenotify

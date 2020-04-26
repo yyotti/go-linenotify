@@ -3,12 +3,10 @@ package linenotify
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -202,11 +200,7 @@ func TestCheckResponse(t *testing.T) {
 
 		a := assert.New(t)
 		t.Run(fmt.Sprintf("%02d", i), func(*testing.T) {
-			response := &http.Response{
-				StatusCode: tt.status,
-				Body:       ioutil.NopCloser(strings.NewReader(tt.response)),
-			}
-			actual := checkResponse(response)
+			actual := checkResponse(tt.status, []byte(tt.response))
 
 			if tt.expectError {
 				a.NotNil(actual)

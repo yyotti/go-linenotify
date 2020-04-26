@@ -4,6 +4,7 @@ package linenotify
 import (
 	"context"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -68,20 +69,25 @@ func (n *notifier) Send(ctx context.Context, message string) error {
 	if err != nil {
 		return xerrors.Errorf("Failed to send request: %w", err)
 	}
+	defer response.Body.Close()
 
-	return checkResponse(response)
-}
-
-func checkResponse(response *http.Response) error {
-	notifyResponse := NotifyResponse{}
-
-	err := json.NewDecoder(response.Body).Decode(&notifyResponse)
+	responseBody, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return xerrors.Errorf("Failed to read response body: %w", err)
 	}
-	defer response.Body.Close()
 
-	if response.StatusCode != http.StatusOK {
+	return checkResponse(response.StatusCode, responseBody)
+}
+
+func checkResponse(statusCode int, body []byte) error {
+	notifyResponse := NotifyResponse{}
+
+	err := json.Unmarshal(body, &notifyResponse)
+	if err != nil {
+		return xerrors.Errorf("Failed to read response body: %w", err)
+	}
+
+	if statusCode != http.StatusOK {
 		return &notifyResponse
 	}
 

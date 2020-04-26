@@ -47,7 +47,6 @@ func New(token string) (Notifier, error) {
 	}, nil
 }
 
-// https://notify-bot.line.me/doc/ja/
 func (n *notifier) Send(ctx context.Context, message string) error {
 	body := url.Values{}
 	body.Set("message", message)
